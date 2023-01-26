@@ -1,0 +1,11 @@
+elasticsearch==8.1.2
+psycopg2-binary
+sqlalchemy
+jupyter
+pandas
+numpy
+statsmodels
+matplotlib
+plotly
+seaborn
+scikit-learn
