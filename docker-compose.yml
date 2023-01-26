@@ -99,6 +99,21 @@ services:
         condition: service_healthy
 
 
+  es-init-seeder:
+    container_name: es-init-seeder
+    build:
+      context: .
+      dockerfile: ./docker/es-init-seeder/Dockerfile
+    environment:
+      - ELASTICSEARCH_HTTP_PORT=${ELASTICSEARCH_HTTP_PORT}
+      - NY_TIMES_API_KEY=${NY_TIMES_API_KEY}
+    networks:
+      - lan
+    depends_on:
+      es-init-indexer:
+        condition: service_started
+
+
   kibana:
       container_name: kb-container
       image: docker.elastic.co/kibana/kibana:8.1.2
