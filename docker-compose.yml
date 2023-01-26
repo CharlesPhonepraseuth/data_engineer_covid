@@ -58,5 +58,75 @@ services:
         condition: service_healthy
 
 
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.2
+    environment:
+      - xpack.security.enabled=${XPACK_SECURITY_ENABLED}
+      - discovery.type=${DISCOVERY_TYPE}
+      - ES_JAVA_OPTS=${ES_JAVA_OPTS}
+      - LOCALHOST_IP=${LOCALHOST_IP}
+      - ELASTICSEARCH_HTTP_PORT=${ELASTICSEARCH_HTTP_PORT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: curl -s http://${LOCALHOST_IP}:${ELASTICSEARCH_HTTP_PORT} >/dev/null || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    ports:
+      - ${ELASTICSEARCH_HTTP_PORT}:${ELASTICSEARCH_HTTP_PORT}
+      - "9300:9300"
+    networks:
+      - lan
+
+
+  es-init-indexer:
+    container_name: es-init-indexer
+    build:
+      context: .
+      dockerfile: ./docker/es-init-indexer/Dockerfile
+    environment:
+      - ELASTICSEARCH_HTTP_PORT=${ELASTICSEARCH_HTTP_PORT}
+      - NY_TIMES_API_KEY=${NY_TIMES_API_KEY}
+    networks:
+      - lan
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+
+  es-init-seeder:
+    container_name: es-init-seeder
+    build:
+      context: .
+      dockerfile: ./docker/es-init-seeder/Dockerfile
+    environment:
+      - ELASTICSEARCH_HTTP_PORT=${ELASTICSEARCH_HTTP_PORT}
+      - NY_TIMES_API_KEY=${NY_TIMES_API_KEY}
+    networks:
+      - lan
+    depends_on:
+      es-init-indexer:
+        condition: service_started
+
+
+  kibana:
+      container_name: kb-container
+      image: docker.elastic.co/kibana/kibana:8.1.2
+      environment:
+        - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      ports:
+        - ${KIBANA_HTTP_PORT}:${KIBANA_HTTP_PORT}
+      networks:
+        - lan
+      depends_on:
+        elasticsearch:
+          condition: service_healthy
+
+
 networks:
   lan:
