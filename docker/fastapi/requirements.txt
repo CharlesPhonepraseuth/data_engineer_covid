@@ -1,0 +1,7 @@
+fastapi
+pydantic
+uvicorn==0.20.0
+pandas
+psycopg2-binary==2.9.5
+sqlalchemy==1.4.45
+elasticsearch==8.1.2
