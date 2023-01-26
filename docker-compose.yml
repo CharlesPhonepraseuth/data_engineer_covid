@@ -128,5 +128,26 @@ services:
           condition: service_healthy
 
 
+  dashboard:
+      container_name: dashboard
+      build:
+        context: .
+        dockerfile: ./docker/dashboard/Dockerfile
+      volumes:
+        - ./app/dashboard:/code/dashboard
+        - ./app/common/utils:/code/common/utils
+      environment:
+        - DASH_HTTP_PORT=${DASH_HTTP_PORT}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_HOST=${POSTGRES_HOST}
+        - POSTGRES_HTTP_PORT=${POSTGRES_HTTP_PORT}
+      ports:
+        - ${DASH_HTTP_PORT}:${DASH_HTTP_PORT}
+      networks:
+        - lan
+
+
 networks:
   lan:
