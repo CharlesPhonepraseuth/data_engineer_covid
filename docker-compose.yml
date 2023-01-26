@@ -42,5 +42,21 @@ services:
         condition: service_healthy
 
 
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - ${PGADMIN_HTTP_PORT}:80
+    networks:
+      - lan
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
 networks:
   lan:
