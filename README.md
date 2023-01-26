@@ -34,6 +34,10 @@ Le projet est relativement lourd. Pour pouvoir l'utiliser convenablement sauf si
 ## Accéder à Airflow
 
 - Connectez-vous sur le port `8080`
+- Créez les dossiers logs et plugins à l'intérieur du dossier airflow
+- Octroyez les autorisations à ces dossiers
+`./app/airflow/logs`
+`./app/airflow/plugins`
 
 ## Accéder au dashboard
 
