@@ -149,5 +149,27 @@ services:
         - lan
 
 
+  fastapi:
+      container_name: fastapi
+      build: 
+        context: .
+        dockerfile: ./docker/fastapi/Dockerfile
+      volumes:
+        - ./app/common/utils:/code/common/utils
+        - ./app/fastapi/router.py:/code/app/router.py
+        - ./app/fastapi/controllers:/code/app/controllers
+      environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_HOST=${POSTGRES_HOST}
+        - POSTGRES_HTTP_PORT=${POSTGRES_HTTP_PORT}
+        - ELASTICSEARCH_HTTP_PORT=${ELASTICSEARCH_HTTP_PORT}
+      ports:
+        - "8000:8000"
+      networks:
+        - lan
+
+
 networks:
   lan:
