@@ -171,5 +171,18 @@ services:
         - lan
 
 
+  notebook:
+      container_name: notebook
+      build:
+        context: .
+        dockerfile: ./docker/notebook/Dockerfile
+      volumes:
+        - ./app/notebook:/home/jupyter/work
+      ports:
+        - ${NOTEBOOK_HTTP_PORT}:${NOTEBOOK_HTTP_PORT}
+      networks:
+        - lan
+
+
 networks:
   lan:
